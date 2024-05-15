@@ -44,3 +44,4 @@ C:\Users\Lenovo\Desktop\teste técnico\back-end\TesteTecnicoApi\bin\Debug\net8.0
 C:\Users\Lenovo\Desktop\teste técnico\back-end\TesteTecnicoApi\bin\Debug\net8.0\NSwag.Generation.AspNetCore.dll
 C:\Users\Lenovo\Desktop\teste técnico\back-end\TesteTecnicoApi\bin\Debug\net8.0\YamlDotNet.dll
 C:\Users\Lenovo\Desktop\teste técnico\back-end\TesteTecnicoApi\obj\Debug\net8.0\TesteTecnicoApi.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Lenovo\Desktop\teste técnico\back-end\TesteTecnicoApi\obj\Debug\net8.0\TesteTecnicoApi.sourcelink.json

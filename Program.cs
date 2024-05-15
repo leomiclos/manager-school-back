@@ -33,39 +33,40 @@ if (app.Environment.IsDevelopment())
 //PARA TESTE DE FUNCIONAMENTO DA API
 app.MapGet("/helloworld", () => "Hello World!");
 
-
+//lista todos os alunos cadastrados
 app.MapGet("/alunos", async (AppDb db) =>
 {
-    var alunos = await db.Alunos.ToListAsync();
     try
     {
-        if (alunos.Count == 0)
-        {
-            return Results.Ok("Não há alunos na lista.");
-        }
-        return Results.Ok(alunos);
+        var alunos = await db.Alunos.ToListAsync();
+        return alunos != null ? Results.Ok(alunos) : Results.NotFound();
     }
     catch (Exception ex)
     {
 
         Console.WriteLine(ex.Message);
-        // Retornar erro 500 + mensagem
         return Results.Problem("Ocorreu um erro ao buscar os alunos. Por favor, tente novamente mais tarde.");
     }
 
 });
 
-
-// app.MapGet("/alunos/{id}", async (int id, AppDb db) =>
-   
-
+//buscar por id
 app.MapGet("/alunos/{id}", async (int id, AppDb db) =>
-    await db.Alunos.FindAsync(id)
-        is Aluno aluno
-            ? Results.Ok(aluno)
-            : Results.NotFound());
+{
+    try
+    {
+        var aluno = await db.Alunos.FindAsync(id);
+        return aluno != null ? Results.Ok(aluno) : Results.NotFound();
 
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+        return Results.Problem("Ocorreu um erro ao buscar o item. A API pode estar indisponível no momento. Por favor, tente novamente mais tarde.");
+    }
+});
 
+//cadastro
 app.MapPost("/alunos", async (AppDb db, Aluno aluno) =>
 {
     try
@@ -83,13 +84,13 @@ app.MapPost("/alunos", async (AppDb db, Aluno aluno) =>
     }
 });
 
-app.MapPut("/alunos/{id}", async (int id, Aluno inputAluno, AppDb db) => 
+//atualização
+app.MapPut("/alunos/{id}", async (int id, Aluno inputAluno, AppDb db) =>
 {
-
     try
     {
         var aluno = await db.Alunos.FindAsync(id);
-        if(aluno is null) return Results.NotFound();
+        if (aluno is null) return Results.NotFound();
 
         aluno.sNome = inputAluno.sNome;
         aluno.sCelular = inputAluno.sCelular;
@@ -99,20 +100,85 @@ app.MapPut("/alunos/{id}", async (int id, Aluno inputAluno, AppDb db) =>
         await db.SaveChangesAsync();
 
         return Results.NoContent();
- 
-
-
     }
     catch (Exception ex)
     {
-        
         Console.WriteLine(ex.Message);
-        // Retornar erro 500 + mensagem
-        return Results.Problem("Ocorreu um erro ao alterar os dados do aluno. Por favor, tente novamente mais tarde.");    }
+        return Results.Problem("Ocorreu um erro ao alterar os dados do aluno. Por favor, tente novamente mais tarde.");
+    }
 });
 
 
 
+app.MapGet("/escola", async (AppDb db) =>
+{
+    try
+    {
+        var escolas = await db.Escola.ToListAsync();
+        return escolas != null ? Results.Ok(escolas) : Results.NotFound();
+    }
+    catch (Exception ex)
+    {
 
+        Console.WriteLine(ex.Message);
+        return Results.Problem("Ocorreu um erro ao buscar os alunos. Por favor, tente novamente mais tarde.");
+    }
+
+});
+
+app.MapGet("/escola/{id}", async (int id, AppDb db) =>
+{
+    try
+    {
+        var escola = await db.Escola.FindAsync(id);
+        return escola != null ? Results.Ok(escola) : Results.NotFound();
+
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+        return Results.Problem("Ocorreu um erro a escola. A API pode estar indisponível no momento. Por favor, tente novamente mais tarde.");
+    }
+});
+
+app.MapPost("/escola", async (AppDb db, Escola escola) =>
+{
+    try
+    {
+        db.Escola.Add(escola);
+        await db.SaveChangesAsync();
+
+        return Results.Created($"/alunos/{escola.iCodEscola}", escola);
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+        // Retornar erro 500 + mensagem
+        return Results.Problem("Ocorreu um erro ao adicionar uma escola. Por favor, tente novamente mais tarde.");
+    }
+});
+
+
+app.MapPut("/escola/{id}", async (int id, Escola inputEscola, AppDb db) =>
+{
+    try
+    {
+        var escola = await db.Escola.FindAsync(id);
+        if (escola is null) return Results.NotFound();
+
+        escola.iCodEscola = inputEscola.iCodEscola;
+        escola.sDescricao = inputEscola.sDescricao;
+
+
+        await db.SaveChangesAsync();
+
+        return Results.NoContent();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+        return Results.Problem("Ocorreu um erro ao alterar os dados do aluno. Por favor, tente novamente mais tarde.");
+    }
+});
 
 app.Run();

@@ -6,6 +6,6 @@ class AppDb : DbContext
         : base(options) { }
 
     public DbSet<Aluno> Alunos => Set<Aluno>();
-    // public DbSet<Escola> Escola => Set<Escola>();
+    public DbSet<Escola> Escola => Set<Escola>();
 
 }
