@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.EntityFrameworkCore;
 using NSwag.AspNetCore;
-
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<AppDb>(opt => opt.UseInMemoryDatabase("AppDb"));
@@ -15,6 +15,16 @@ builder.Services.AddOpenApiDocument(config =>
     config.Version = "v1";
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
 
 var app = builder.Build();
 
@@ -30,10 +40,11 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseCors("AllowAllOrigins");
+
 //PARA TESTE DE FUNCIONAMENTO DA API
 app.MapGet("/helloworld", () => "Hello World!");
 
-//lista todos os alunos cadastrados
 app.MapGet("/alunos", async (AppDb db) =>
 {
     try
@@ -43,21 +54,17 @@ app.MapGet("/alunos", async (AppDb db) =>
     }
     catch (Exception ex)
     {
-
         Console.WriteLine(ex.Message);
         return Results.Problem("Ocorreu um erro ao buscar os alunos. Por favor, tente novamente mais tarde.");
     }
-
 });
 
-//buscar por id
 app.MapGet("/alunos/{id}", async (int id, AppDb db) =>
 {
     try
     {
         var aluno = await db.Alunos.FindAsync(id);
         return aluno != null ? Results.Ok(aluno) : Results.NotFound();
-
     }
     catch (Exception ex)
     {
@@ -66,11 +73,13 @@ app.MapGet("/alunos/{id}", async (int id, AppDb db) =>
     }
 });
 
-//cadastro
 app.MapPost("/alunos", async (AppDb db, Aluno aluno) =>
 {
     try
-    {
+    {   
+        // Vem do front como string
+        var dataFormatada = aluno.GetFormattedNascimento();
+
         db.Alunos.Add(aluno);
         await db.SaveChangesAsync();
 
@@ -79,12 +88,10 @@ app.MapPost("/alunos", async (AppDb db, Aluno aluno) =>
     catch (Exception ex)
     {
         Console.WriteLine(ex.Message);
-        // Retornar erro 500 + mensagem
         return Results.Problem("Ocorreu um erro ao adicionar o aluno. Por favor, tente novamente mais tarde.");
     }
 });
 
-//atualização
 app.MapPut("/alunos/{id}", async (int id, Aluno inputAluno, AppDb db) =>
 {
     try
@@ -108,7 +115,24 @@ app.MapPut("/alunos/{id}", async (int id, Aluno inputAluno, AppDb db) =>
     }
 });
 
+app.MapDelete("/alunos/{id}", async (int id, AppDb db) =>
+{
+    try
+    {
+        var aluno = await db.Alunos.FindAsync(id);
+        if (aluno is null) return Results.NotFound();
 
+        db.Alunos.Remove(aluno);
+        await db.SaveChangesAsync();
+
+        return Results.NoContent();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+        return Results.Problem("Ocorreu um erro ao deletar o aluno. Por favor, tente novamente mais tarde.");
+    }
+});
 
 app.MapGet("/escola", async (AppDb db) =>
 {
@@ -119,11 +143,9 @@ app.MapGet("/escola", async (AppDb db) =>
     }
     catch (Exception ex)
     {
-
         Console.WriteLine(ex.Message);
         return Results.Problem("Ocorreu um erro ao buscar os alunos. Por favor, tente novamente mais tarde.");
     }
-
 });
 
 app.MapGet("/escola/{id}", async (int id, AppDb db) =>
@@ -132,7 +154,6 @@ app.MapGet("/escola/{id}", async (int id, AppDb db) =>
     {
         var escola = await db.Escola.FindAsync(id);
         return escola != null ? Results.Ok(escola) : Results.NotFound();
-
     }
     catch (Exception ex)
     {
@@ -158,7 +179,6 @@ app.MapPost("/escola", async (AppDb db, Escola escola) =>
     }
 });
 
-
 app.MapPut("/escola/{id}", async (int id, Escola inputEscola, AppDb db) =>
 {
     try
@@ -169,7 +189,6 @@ app.MapPut("/escola/{id}", async (int id, Escola inputEscola, AppDb db) =>
         escola.iCodEscola = inputEscola.iCodEscola;
         escola.sDescricao = inputEscola.sDescricao;
 
-
         await db.SaveChangesAsync();
 
         return Results.NoContent();
@@ -178,6 +197,25 @@ app.MapPut("/escola/{id}", async (int id, Escola inputEscola, AppDb db) =>
     {
         Console.WriteLine(ex.Message);
         return Results.Problem("Ocorreu um erro ao alterar os dados do aluno. Por favor, tente novamente mais tarde.");
+    }
+});
+
+app.MapDelete("/escola/{id}", async (int id, AppDb db) =>
+{
+    try
+    {
+        var escola = await db.Escola.FindAsync(id);
+        if (escola is null) return Results.NotFound();
+
+        db.Escola.Remove(escola);
+        await db.SaveChangesAsync();
+
+        return Results.NoContent();
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine(ex.Message);
+        return Results.Problem("Ocorreu um erro ao deletar a escola. Por favor, tente novamente mais tarde.");
     }
 });
 

@@ -1,6 +1,11 @@
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
 public class Escola
-    {
-        public int Id {get; set;}
-        public int iCodEscola { get; set; }
-        public string? sDescricao { get; set; }
-    }
+{
+    [Key]
+    [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+    public int iCodEscola { get; set; }
+
+    public string? sDescricao { get; set; }
+}
