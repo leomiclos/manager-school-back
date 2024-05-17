@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: my-dotnet-api
+    env: dotnet
+    branch: main
+    buildCommand: dotnet publish -c Release -o out
+    startCommand: dotnet out/TesteTecnicoApi.dll

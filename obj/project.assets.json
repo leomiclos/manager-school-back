@@ -3520,19 +3520,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\leonardo.miclos\\.nuget\\packages\\": {}
+    "C:\\Users\\Lenovo\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\leonardo.miclos\\Desktop\\faculdade\\teste-backend\\testeTecnico\\TesteTecnicoApi.csproj",
+      "projectUniqueName": "C:\\Users\\Lenovo\\Desktop\\teste técnico\\back-end\\TesteTecnicoApi\\TesteTecnicoApi.csproj",
       "projectName": "TesteTecnicoApi",
-      "projectPath": "C:\\Users\\leonardo.miclos\\Desktop\\faculdade\\teste-backend\\testeTecnico\\TesteTecnicoApi.csproj",
-      "packagesPath": "C:\\Users\\leonardo.miclos\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\leonardo.miclos\\Desktop\\faculdade\\teste-backend\\testeTecnico\\obj\\",
+      "projectPath": "C:\\Users\\Lenovo\\Desktop\\teste técnico\\back-end\\TesteTecnicoApi\\TesteTecnicoApi.csproj",
+      "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\Lenovo\\Desktop\\teste técnico\\back-end\\TesteTecnicoApi\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\leonardo.miclos\\AppData\\Roaming\\NuGet\\NuGet.Config"
+        "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config"
       ],
       "originalTargetFrameworks": [
         "net8.0"
