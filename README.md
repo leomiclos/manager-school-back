@@ -1,4 +1,4 @@
-## Documentação da API TesteTecnico
+## Documentação da API de Gerenciamento de Alunos e Escolas
 
 ### Tecnologias Utilizadas
 
